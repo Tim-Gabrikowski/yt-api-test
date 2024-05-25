@@ -34,6 +34,20 @@ app.get("/oauthcallback", async (req, res) => {
 	res.send(tokens);
 });
 
+app.get("/my", async (req, res) => {
+	try {
+		const yt = google.youtube({ version: "v3", auth: oauth2Client });
+		let c = await yt.channels.list({
+			part: "id,snippet,statistics,contentDetails",
+			mine: true,
+		});
+		res.send(c.data.items[0]);
+	} catch (e) {
+		console.log(e);
+		res.sendStatus(500);
+	}
+});
+
 app.get("/search", async (req, res) => {
 	const searchTerm = req.query.t;
 
